@@ -147,6 +147,30 @@ input[type=text]:focus,input[type=password]:focus,textarea:focus{border-color:va
 .x{border:0;background:none;color:var(--ink3);font-size:14px;text-decoration:underline}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 22px;border-radius:999px;font-weight:650;font-size:16px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px);text-align:center}
 .toast.show{opacity:1}
+/* 가사: 덩어리 탭, 빈 줄과 쓴 줄, 따라다니는 말 창고 */
+.stabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.stab{border:2px solid var(--line);background:var(--paper);border-radius:14px;padding:8px 16px;display:flex;align-items:baseline;gap:8px}
+.stab:hover{border-color:var(--ink)}
+.stab b{font-weight:800}
+.stab span{font-size:13.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.stab.full span{color:var(--ok);font-weight:750}
+.stab[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.stab[aria-pressed=true] span{color:#C9D0DE}
+.stabs+.sec{margin-top:0}
+.ln-r input:placeholder-shown{background:var(--paper);border-color:var(--line)}
+.ln-r input:placeholder-shown:focus{border-color:var(--accent)}
+.exbox{background:var(--accent-soft);border-radius:12px;padding:12px 16px;margin-top:8px;line-height:1.7}
+.exbox b{display:block;font-size:13.5px;color:#1B3AC4;margin-bottom:2px}
+.exbox span{display:block;font-size:13.5px;color:var(--ink2);margin-top:6px}
+.side{position:sticky;top:72px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 160px);min-width:0}
+.side .sheet{position:static;max-height:none;flex:1 1 auto;min-height:120px}
+.bank.out{background:var(--paper);margin:0;padding:16px 18px;flex:0 0 auto;max-height:46vh;overflow:auto}
+.bank.out h2{font-size:18px;margin-bottom:8px}
+.bank.out h2 small{flex-basis:100%;font-size:13.5px}
+.bank.out .word{background:var(--bg);box-shadow:none}
+.bank.out .word:hover{background:var(--mark)}
+.bank.in{display:none}
+@media (max-width:980px){.side{position:static;max-height:none}.bank.out{display:none}.bank.in{display:block}}
 /* 선생님께 보내기 · 선생님 화면 */
 .send{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .send input{flex:1;min-width:180px;max-width:320px}
@@ -344,7 +368,7 @@ const STEPS=['주제','가사','소리','노래 만들기','그림','발표'];
 /* ───────── 상태 ───────── */
 const KEY='soundlab-v4';
 const blank=()=>({level:'e',step:0,topic:'',about:'',L:{v1:['','','',''],pre:['',''],ch:['','','',''],v2:['','','',''],br:['','']},rep:false,chant:'',custom:null,title:'',
- preset:'',allPre:false,genres:[],moods:[],tempo:'',key:'',who:'',how:'',inst:[],instMine:false,tex:[],flow:'',more:'',fix:[],prev:null,picks:[],hero:'',look:'',color:'',cam:'',trans:'',bank:0,nick:'',sid:'',sent:0,isent:0,final:'',why:'',best:'',feel:''});
+ preset:'',allPre:false,genres:[],moods:[],tempo:'',key:'',who:'',how:'',inst:[],instMine:false,tex:[],flow:'',more:'',fix:[],prev:null,picks:[],hero:'',look:'',color:'',cam:'',trans:'',bank:0,sec:'v1',nick:'',sid:'',sent:0,isent:0,final:'',why:'',best:'',feel:''});
 let S=blank();
 function merge(a,b){for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')merge(a[k],b[k]);else a[k]=b[k]}return a}
 try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d)S=merge(blank(),d)}catch(e){}
@@ -463,7 +487,18 @@ const simple=(list,sub)=>list.map(x=>({id:x[0],b:x[1],s:sub!=null?x[sub]:'',tier
 const pbox=(tag,to,name,arg)=>`<div class="pbox"><div class="pbox-h"><span class="ptag">${tag}</span><span class="pto">${to}</span><button class="copy" data-copy="${name}${arg!=null?':'+arg:''}">복사</button></div><pre data-live="${name}${arg!=null?':'+arg:''}">${esc(TEXT[name](arg))}</pre></div>`;
 const means=()=>{const t=tags();return t.length?`<div class="means">${t.map(x=>`<div class="mean ${S.prev&&!S.prev.includes(x[0])?'new':''}"><b>${esc(x[0])}</b>${esc(x[1])}</div>`).join('')}${style().length>200?`<div class="long">${T('주문이 너무 길어. 몇 개를 빼면 AI가 더 잘 알아들어.','주문이 길어. 꼭 필요한 것만 남기면 AI가 더 잘 알아들어.','프롬프트가 200자를 넘었어요. 핵심만 남기면 결과가 더 정확해져요.')}</div>`:''}</div>`:''};
 function lineRow(k,i){const ex=exOf(k,i);
- return `<div class="ln"><label for="l-${k}-${i}">${Q[lv()][k][i]}</label><div class="ln-r"><input type="text" id="l-${k}-${i}" data-k="L.${k}.${i}" value="${esc(S.L[k][i])}" placeholder="${ex?'예) '+esc(ex):''}" autocomplete="off"><span class="cnt" data-live="cnt:${k}.${i}">${cnt(k+'.'+i)}</span>${ex?`<button class="exb" data-ex="${k}.${i}">예시 넣기</button>`:''}</div></div>`}
+ return `<div class="ln"><label for="l-${k}-${i}">${Q[lv()][k][i]}</label><div class="ln-r"><input type="text" id="l-${k}-${i}" data-k="L.${k}.${i}" value="${esc(S.L[k][i])}" placeholder="${ex?'예) '+esc(ex):''}" autocomplete="off"><span class="cnt" data-live="cnt:${k}.${i}">${cnt(k+'.'+i)}</span></div></div>`}
+// 말 창고: 넓은 화면에서는 오른쪽에 붙어 있고(side), 좁은 화면에서는 가사 줄 아래에 나온다(in)
+const bankHTML=c=>`<div class="bank ${c}"><h2>${T('말 창고','표현 창고','표현 도구')} <small>${T('줄을 누른 다음, 넣고 싶은 말을 눌러','쓰던 줄을 누른 다음 넣을 말을 눌러','입력 중인 줄을 누른 뒤 표현을 눌러 넣어요')}</small></h2>
+ <div class="bank-t">${BANK.map((b,i)=>b[2]<=lv()?`<button class="tog" data-bank="${i}" aria-pressed="${S.bank===i}">${b[0]}</button>`:'').join('')}</div>
+ <div class="words">${(BANK[S.bank][2]<=lv()?BANK[S.bank]:BANK[0])[1].map(gp=>(gp[0]?`<h4>${gp[0]}</h4>`:'')+gp[1].map(w=>`<button class="word" data-word="${w}">${w}</button>`).join('')).join('')}</div></div>`;
+let showEx=false,entT=0;
+const curSec=()=>{const ks=secs();return ks.includes(S.sec)?S.sec:ks[0]};
+const filled=k=>S.L[k].slice(0,nLines(k)).filter(s=>s.trim()).length;
+// 엔터: 다음 줄로. 덩어리의 마지막 줄이면 다음 덩어리로 (초등의 이야기 ②는 스스로 고를 때만)
+function nextLine(el){if(Date.now()-entT<200)return;entT=Date.now();
+ const a=[...document.querySelectorAll('.ln input')],i=a.indexOf(el);if(a[i+1])return a[i+1].focus();
+ const ks=secs(),nx=ks[ks.indexOf(curSec())+1];if(nx&&(lv()||nx!=='v2')){S.sec=nx;store();render(1);document.querySelector('.ln input')?.focus()}}
 function cnt(a){const [k,i]=a.split('.'),n=count(S.L[k][i]);return n?(n>LIMIT[lv()]?`<span class="w">${n}자 · 길어요</span>`:`${n}자`):''}
 
 /* ───────── 화면 ───────── */
@@ -478,12 +513,14 @@ const VIEW=[
 
 ()=>`<h1>${T('한 줄씩 <mark>가사</mark>를 써 보자','<mark>가사</mark>를 한 줄씩 채워 보자','구조에 맞춰 <mark>가사</mark>를 써 봐요')}</h1>
  ${S.custom!=null?`<p class="hint">'노래 만들기'에서 가사를 직접 고쳤어요. 여기서 다시 쓰려면 <button class="x" data-act="uncustom">줄 쓰기 내용으로 되돌리기</button></p>`:''}
- ${secs().map(k=>`<div class="sec"><div class="sec-h"><b>${SEC[lv()][k][0]}</b><span>${SEC[lv()][k][1]}</span>${k==='v2'&&!lv()?'<span class="badge">더 쓰고 싶으면</span>':''}${k==='pre'?'<span class="badge">선택</span>':''}</div>
+ <div class="stabs">${secs().map(k=>`<button class="stab ${filled(k)>=nLines(k)?'full':''}" data-sec="${k}" aria-pressed="${k===curSec()}"><b>${SEC[lv()][k][0]}</b><span>${filled(k)}/${nLines(k)}줄</span></button>`).join('')}</div>
+ ${[curSec()].map(k=>{const ex=Array.from({length:nLines(k)},(_,i)=>exOf(k,i)).filter(Boolean),ks=secs(),nx=ks[ks.indexOf(k)+1];
+ return `<div class="sec"><div class="sec-h"><b>${SEC[lv()][k][0]}</b><span>${SEC[lv()][k][1]}</span>${k==='v2'&&!lv()?'<span class="badge">더 쓰고 싶으면</span>':''}${k==='pre'?'<span class="badge">선택</span>':''}<span class="spacer"></span>${ex.length?`<button class="exb" data-act="exshow">${showEx?'예시 닫기':'예시 보기'}</button>`:''}</div>
+ ${showEx&&ex.length?`<div class="exbox"><b>이렇게 쓸 수 있어요</b>${ex.map(esc).join('<br>')}<span>그대로 옮기지 말고 내 이야기로 바꿔 써요.</span></div>`:''}
  ${Array.from({length:nLines(k)},(_,i)=>lineRow(k,i)).join('')}
- ${k==='ch'?`<div class="opt"><button class="tog" data-act="rep" aria-pressed="${S.rep}">첫 줄 한 번 더 부르기</button>${CHANT.map(w=>`<button class="tog" data-chant="${w}" aria-pressed="${S.chant===w}">${w}</button>`).join('')}</div>`:''}</div>`).join('')}
- <div class="bank"><h2>${T('말 창고','표현 창고','표현 도구')} <small>${T('줄을 누른 다음, 넣고 싶은 말을 눌러','쓰던 줄을 누른 다음 넣을 말을 눌러','입력 중인 줄을 누른 뒤 표현을 눌러 넣어요')}</small></h2>
- <div class="bank-t">${BANK.map((b,i)=>b[2]<=lv()?`<button class="tog" data-bank="${i}" aria-pressed="${S.bank===i}">${b[0]}</button>`:'').join('')}</div>
- <div class="words">${(BANK[S.bank][2]<=lv()?BANK[S.bank]:BANK[0])[1].map(gp=>(gp[0]?`<h4>${gp[0]}</h4>`:'')+gp[1].map(w=>`<button class="word" data-word="${w}">${w}</button>`).join('')).join('')}</div></div>
+ ${k==='ch'?`<div class="opt"><button class="tog" data-act="rep" aria-pressed="${S.rep}">첫 줄 한 번 더 부르기</button>${CHANT.map(w=>`<button class="tog" data-chant="${w}" aria-pressed="${S.chant===w}">${w}</button>`).join('')}</div>`:''}
+ ${nx?`<div class="row"><button class="btn line" data-sec="${nx}">다음: ${SEC[lv()][nx][0]} 쓰기</button></div>`:''}</div>`}).join('')}
+ ${bankHTML('in')}
  <p class="hint">${T('한 줄은 12자쯤이 부르기 좋아. 줄마다 길이가 비슷하면 더 좋아.','줄마다 글자 수를 비슷하게 맞추면 박자에 잘 붙어. 한 줄은 15자까지.','줄마다 음절 수를 맞추면 멜로디에 잘 붙어요. 느낌을 직접 말하기보다 장면으로 보여 주면 더 와닿아요.')}</p>`,
 
 ()=>{const vis=PRE.filter(p=>p.tier<=lv()),rec=[...(topic()?.rec||[]).map(id=>vis.find(p=>p.id===id)).filter(Boolean),...vis].filter((p,i,a)=>a.indexOf(p)===i).slice(0,3);
@@ -568,7 +605,7 @@ function render(keep){
  <div class="seg" aria-label="학교급">${[['e','초등'],['m','중등'],['h','고등']].map(l=>`<button data-level="${l[0]}" aria-pressed="${S.level===l[0]}">${l[1]}</button>`).join('')}</div>
  <button class="ghost" data-act="save">저장</button><button class="ghost" data-act="load">불러오기</button><button class="ghost" data-act="tgo">선생님</button></div></header>
  <nav class="rail">${G.map(x=>`<span class="grp">${x[0]}</span>`+STEPS.slice(x[1],x[2]).map((t,j)=>{const i=x[1]+j;return `<button class="rs ${S.step===i?'on':''} ${DONE[i]()?'done':''}" data-step="${i}"><span class="n">${i+1}</span><span class="t">${t}</span></button>`}).join('')).join('')}</nav>
- <div class="wrap"><main class="card">${VIEW[S.step]()}</main><aside class="sheet" data-live="sheet" aria-label="내 노래">${sheet()}</aside></div>
+ <div class="wrap"><main class="card">${VIEW[S.step]()}</main><div class="side">${S.step===1?bankHTML('out'):''}<aside class="sheet" data-live="sheet" aria-label="내 노래">${sheet()}</aside></div></div>
  <div class="nav"><div class="nav-in"><button class="btn line" data-act="prev" ${S.step?'':'disabled style="opacity:.3"'}>이전</button>${S.step?'':'<button class="x" data-act="reset">처음부터 새로 하기</button>'}<span class="next">${S.step<5?'다음: '+STEPS[S.step+1]:'다 만들었어요!'}</span>${S.step<5?'<button class="btn" data-act="next">다음</button>':''}</div></div>`;
  if(!keep)window.scrollTo(0,0)}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2200)}
@@ -594,6 +631,8 @@ function beat(bpm){try{
 /* ───────── 이벤트 ───────── */
 const SOUND=['genres','moods','tempo','key','who','how','inst','tex','flow'];
 let lastLine=null;
+document.addEventListener('keydown',e=>{if(!(e.key==='Enter'||e.code==='Enter'||e.code==='NumpadEnter')||!e.target.dataset?.k?.startsWith('L.'))return;
+ const el=e.target;if(e.isComposing)el.addEventListener('compositionend',()=>setTimeout(()=>nextLine(el),0),{once:true});else{e.preventDefault();nextLine(el)}});
 document.addEventListener('focusin',e=>{if(e.target.dataset?.k?.startsWith('L.'))lastLine=e.target.dataset.k});
 // 선생님이 링크를 붙여넣으면 바로 저장. 칸에서 나오면 카드 순서를 다시 정리
 document.addEventListener('input',e=>{const tl=e.target.dataset?.tl;if(!tl)return;const [id,k]=tl.split('.'),v=e.target.value.trim(),x=INBOX.find(i=>i.id===id);if(!x)return;
@@ -617,6 +656,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
  if(d.idea){S.about=S.about===d.idea?'':d.idea;store();return render(1)}
  if(d.ex){const [k,i]=d.ex.split('.'),ex=exOf(k,+i);if(S.L[k][i].trim()&&S.L[k][i]!==ex)return toast('이미 쓴 줄이 있어요. 지우고 누르면 예시가 들어가요.');S.L[k][i]=ex;store();render(1);toast('예시를 넣었어요. 내 이야기로 고쳐 보세요.');return}
  if(d.word){if(!lastLine||!document.querySelector(`[data-k="${lastLine}"]`))return toast('먼저 넣고 싶은 줄을 눌러 주세요.');const el=document.querySelector(`[data-k="${lastLine}"]`),p=el.selectionStart??el.value.length,w=(p&&el.value[p-1]!==' '?' ':'')+d.word+(el.value[p]&&el.value[p]!==' '?' ':'');el.value=el.value.slice(0,p)+w+el.value.slice(p);put(lastLine,el.value);store();live();el.focus();el.setSelectionRange(p+w.length,p+w.length);return}
+ if(d.sec){S.sec=d.sec;showEx=false;store();render(1);document.querySelector('.ln input')?.focus();return}
  if(d.best){S.best=S.best===d.best?'':d.best;store();return render(1)}
  if(d.bank){S.bank=+d.bank;store();return render(1)}
  if(d.chant){S.chant=S.chant===d.chant?'':d.chant;store();return render(1)}
@@ -651,6 +691,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
    api({op:'put',id:S.sid,f:{nick,title:titleNow(),level:S.level,at:Date.now(),imgs:Array.from({length:n},(_,i)=>imgPrompt(i)),imgRe:!!S.isent}})
     .then(r=>{if(!r.ok)throw 0;S.isent=Date.now();store();render(1);mine();toast('선생님께 보냈어요!')})
     .catch(()=>{t.disabled=false;toast('보내지 못했어요. 선생님께 말해 주세요.')});return}
+  case'exshow':showEx=!showEx;return render(1);
   case'tgo':location.hash='#teacher';return;
   case'tback':location.hash='';return;
   case'trefresh':return inbox().then(()=>toast('새로 불러왔어요.'));
