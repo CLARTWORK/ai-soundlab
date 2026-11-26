@@ -49,9 +49,9 @@ h2 small{font-size:15px;font-weight:500;color:var(--ink3)}
 .gh{font-size:14px;font-weight:800;color:var(--ink3);margin:16px 0 8px}
 .gh:first-child{margin-top:0}
 
-input[type=text],textarea{width:100%;border:2px solid var(--line);border-radius:12px;padding:11px 14px;background:var(--paper);line-height:1.6}
+input[type=text],input[type=password],textarea{width:100%;border:2px solid var(--line);border-radius:12px;padding:11px 14px;background:var(--paper);line-height:1.6}
 textarea{resize:vertical}
-input[type=text]:focus,textarea:focus{border-color:var(--accent);outline:0}
+input[type=text]:focus,input[type=password]:focus,textarea:focus{border-color:var(--accent);outline:0}
 ::placeholder{color:#A4ACBA}
 
 /* 고르는 카드 */
@@ -147,6 +147,31 @@ input[type=text]:focus,textarea:focus{border-color:var(--accent);outline:0}
 .x{border:0;background:none;color:var(--ink3);font-size:14px;text-decoration:underline}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 22px;border-radius:999px;font-weight:650;font-size:16px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px);text-align:center}
 .toast.show{opacity:1}
+/* 선생님께 보내기 · 선생님 화면 */
+.send{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.send input{flex:1;min-width:180px;max-width:320px}
+.sent{color:var(--ok);font-weight:700}
+.demo{background:var(--mark);border-radius:12px;padding:8px 14px;font-size:14.5px;font-weight:650;margin:0 0 18px}
+.tw{max-width:1240px;margin:0 auto;padding:24px 20px 80px}
+.tw h1 small{font-size:17px;font-weight:600;color:var(--ink3);letter-spacing:0}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(360px,100%),1fr));gap:16px;align-items:start}
+.tc{background:var(--paper);border-radius:18px;padding:20px 22px}
+.tc.done{opacity:.5}
+.tc-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tc-h b{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.tc-h span{font-size:14px;color:var(--ink3)}
+.tf{margin-top:12px;background:var(--bg);border-radius:12px;padding:10px 12px}
+.tf-h{display:flex;align-items:center;gap:8px}
+.tf-h .copy{background:var(--ink);color:#fff;padding:5px 16px}
+.tf-h .copy:hover{color:var(--ink)}
+.tsec{font-size:14px;font-weight:800;color:var(--accent);margin:18px 0 -4px}
+.tback{margin-top:12px;border:2px dashed var(--line);border-radius:12px;padding:10px 12px 12px}
+.tback label{display:block;font-size:13.5px;color:var(--ink2);font-weight:600}
+.tl{margin-top:8px;font-size:15px;padding:8px 12px!important}
+.got{margin-top:16px;background:var(--accent-soft);border-radius:16px;padding:16px 20px 18px}
+.got b{font-size:19px;font-weight:800;margin-right:10px}
+.got span{font-size:15px;color:var(--ink2)}
+.tf pre{margin:8px 0 0;font:14.5px/1.6 var(--mono);white-space:pre-wrap;max-height:132px;overflow:auto}
 @media (max-width:980px){.wrap{grid-template-columns:1fr}.sheet{position:static;max-height:none}.card{padding:24px 18px 30px}}
 @media (max-width:560px){.top-in,.rail,.wrap,.nav-in{padding-left:16px;padding-right:16px}.rs .t{display:none}.rs.on .t{display:inline}.grp{display:none}.cnt{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -314,12 +339,12 @@ const LOOK=[['water','수채화','watercolor illustration',['#A8D8EA','#F9D5A7',
 const COLOR=[['sky','맑은 하늘색','soft blue and cream',['#8ECAE6','#FDF6E3','#219EBC']],['sun','햇살 노랑·초록','warm yellow and green',['#FFD166','#8AC926','#FFF8E1']],['night','밤하늘 남색·보라','navy and violet',['#1B1F4B','#6C4AB6','#B9A6F5']],['sunset','노을 주황·분홍','sunset orange and pink',['#FF7B54','#FFB5A7','#FFE5D9']],['mono','흑백에 한 가지 색','black and white with one accent color',['#111','#DDD','#E63946']],['forest','숲 초록·갈색','forest green and brown',['#2D6A4F','#B08968','#D8F3DC']]];
 const CAM=[['still','가만히 보여 주기','static camera'],['push','천천히 다가가기','slow push-in'],['pan','옆으로 스르륵','slow pan'],['follow','주인공 따라가기','tracking shot']];
 const TRANS=[['cut','탁! 바로 바꾸기','straight cuts'],['fade','스르륵 겹치기','soft dissolves'],['beat','쿵 박자에 맞춰 바꾸기','beat-synced cuts']];
-const STEPS=['주제','가사','소리','노래 만들기','그림','영상'];
+const STEPS=['주제','가사','소리','노래 만들기','그림','발표'];
 
 /* ───────── 상태 ───────── */
 const KEY='soundlab-v4';
 const blank=()=>({level:'e',step:0,topic:'',about:'',L:{v1:['','','',''],pre:['',''],ch:['','','',''],v2:['','','',''],br:['','']},rep:false,chant:'',custom:null,title:'',
- preset:'',allPre:false,genres:[],moods:[],tempo:'',key:'',who:'',how:'',inst:[],instMine:false,tex:[],flow:'',more:'',fix:[],prev:null,picks:[],hero:'',look:'',color:'',cam:'',trans:'',bank:0});
+ preset:'',allPre:false,genres:[],moods:[],tempo:'',key:'',who:'',how:'',inst:[],instMine:false,tex:[],flow:'',more:'',fix:[],prev:null,picks:[],hero:'',look:'',color:'',cam:'',trans:'',bank:0,nick:'',sid:'',sent:0,isent:0,final:'',why:'',best:'',feel:''});
 let S=blank();
 function merge(a,b){for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==='object')merge(a[k],b[k]);else a[k]=b[k]}return a}
 try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d)S=merge(blank(),d)}catch(e){}
@@ -373,7 +398,57 @@ function imgPrompt(i){const p=S.picks[i],L=by(LOOK,S.look),C=by(COLOR,S.color),m
 function mvPrompt(){const en=[by(LOOK,S.look)?.[2],by(COLOR,S.color)&&by(COLOR,S.color)[2]+' palette',...S.moods.map(m=>by(MOOD,m)?.[2]),by(CAM,S.cam)?.[2],by(TRANS,S.trans)?.[2]].filter(Boolean).join(', ');
  const sc=S.picks.map((p,i)=>`${i+1}. ${p.more.trim()||p.line}`).join('\n');
  return `${en}${S.hero.trim()?`\n주인공: ${S.hero.trim()}`:''}${sc?`\n\n장면 순서\n${sc}`:''}`.trim()}
-const TEXT={title:()=>titleNow()||'(제목을 정하면 여기에 나와요)',lyrics:()=>lyrics()||'(가사를 쓰면 여기에 나와요)',style:()=>style()||'(소리를 고르면 여기에 나와요)',img:i=>imgPrompt(+i),mv:()=>mvPrompt()||'(고르면 여기에 나와요)'};
+/* ───────── 선생님께 보내기 ─────────
+   SEND_URL이 비어 있으면 미리보기: 보낸 주문이 이 브라우저 안에만 저장돼요.
+   선생님 화면은 주소 끝에 #teacher 를 붙여서 열어요. */
+const SEND_URL='https://script.google.com/macros/s/AKfycbyr8A8vj9-94zl-kHaocsY-fANC8J4qR_UjJX6aZWKXwUsd0ogJo6FioMr6Ep_R7Odq-A/exec',BOX='soundlab-inbox',TEACH=()=>location.hash==='#teacher';
+let INBOX=[],tkey='',tmsg='';
+try{tkey=sessionStorage.getItem('soundlab-tkey')||''}catch(e){}
+const boxGet=()=>{try{return JSON.parse(localStorage.getItem(BOX)||'[]')}catch(e){return[]}};
+async function api(body){
+ if(!SEND_URL){let a=boxGet();
+  if(body.op==='put'){const x=a.find(i=>i.id===body.id);x?Object.assign(x,body.f):a.push({id:body.id,...body.f})}
+  if(body.op==='del')a=a.filter(x=>x.id!==body.id);
+  if(body.op==='clear')a=[];
+  localStorage.setItem(BOX,JSON.stringify(a));return{ok:true}}
+ return(await fetch(SEND_URL,{method:'POST',body:JSON.stringify(TEACH()?{...body,key:tkey}:body)})).json()}
+async function inbox(){const was=JSON.stringify(INBOX)+tmsg;
+ if(!SEND_URL){INBOX=boxGet();tmsg=''}
+ else if(!tkey){INBOX=[];tmsg='선생님 암호를 넣고 확인을 눌러 주세요.'}
+ else try{const r=await api({op:'list'});if(r.ok){INBOX=r.items;tmsg=''}else{INBOX=[];tmsg='암호가 맞지 않아요.'}}catch(e){tmsg='목록을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.'}
+ if(TEACH()&&was!==JSON.stringify(INBOX)+tmsg)render(1)}
+const clock=t=>new Date(t).toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit'});
+// 학생 화면: 선생님이 붙여 준 링크 받아 오기
+let MINE=null,mineOnce=false;
+async function mine(){if(!S.sid||TEACH())return;let m;
+ try{m=SEND_URL?(await(await fetch(SEND_URL+'?id='+encodeURIComponent(S.sid))).json()).item:boxGet().find(x=>x.id===S.sid)}catch(e){return}
+ m=m||null;const old=MINE,was=JSON.stringify(old);MINE=m;if(was===JSON.stringify(m))return;
+ if(mineOnce&&m){if(safe(m.song1)&&m.song1!==old?.song1)toast('노래가 도착했어요!');else if(safe(m.imgLink)&&m.imgLink!==old?.imgLink)toast('그림이 도착했어요!')}
+ mineOnce=true;live()}
+const safe=u=>/^https:\/\/\S+$/i.test((u||'').trim())?u.trim():'';
+const todoS=x=>!!x.lyrics&&(!safe(x.song1)||!!x.re),todoI=x=>!!x.imgs?.length&&(!safe(x.imgLink)||!!x.imgRe),todo=x=>todoS(x)||todoI(x);
+function got(){const m=MINE,l=m?[m.song1,m.song2].map(safe).filter(Boolean):[];
+ if(!l.length)return S.sent?`<p class="hint">${T('선생님이 노래를 만들고 있어. 다 되면 여기에 듣기 버튼이 생겨.','선생님이 노래를 만들고 있어. 다 되면 여기에 듣기 버튼이 생겨.','곡을 생성하는 중이에요. 완성되면 여기에 듣기 버튼이 생겨요.')}</p>`:'';
+ return `<div class="got"><b>노래가 도착했어요!</b><span>이어폰을 끼고 들어 봐${T('','','요')}</span><div class="row">${l.map((u,i)=>`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener">▶ 노래 ${'①②'[i]} 듣기</a>`).join('')}</div>${m.re?'<p class="hint">고친 주문으로 선생님이 다시 만들고 있어요.</p>':''}</div>`}
+function gotimg(){const u=safe(MINE?.imgLink);
+ if(!u)return S.isent?`<p class="hint">${T('선생님이 그림을 만들고 있어. 다 되면 여기에 버튼이 생겨.','선생님이 그림을 만들고 있어. 다 되면 여기에 버튼이 생겨.','그림을 생성하는 중이에요. 완성되면 여기에 버튼이 생겨요.')}</p>`:'';
+ return `<div class="got"><b>그림이 도착했어요!</b><div class="row"><a class="btn" href="${esc(u)}" target="_blank" rel="noopener">내 그림 보러 가기</a></div>${MINE.imgRe?'<p class="hint">고친 주문으로 선생님이 다시 만들고 있어요.</p>':''}</div>`}
+function teacher(){const L=[...INBOX].sort((a,b)=>(!todo(a)-!todo(b))||(a.at-b.at)),left=L.filter(todo).length;
+ const link=(x,k,ph)=>`<input type="text" class="tl" data-tl="${x.id}.${k}" value="${esc(x[k]||'')}" placeholder="${ph}" autocomplete="off">`;
+ const f=(x,k,tag)=>`<div class="tf"><div class="tf-h"><span class="ptag">${tag}</span><span class="spacer"></span><button class="copy" data-copy="in:${x.id}.${k}">복사</button></div><pre>${esc(TEXT.in(x.id+'.'+k))}</pre></div>`;
+ return `<header class="top"><div class="top-in"><div class="brand">AI 사운드<i>랩</i> · 선생님</div><span class="spacer"></span>
+ <button class="ghost" data-act="tback">학생 화면으로</button><button class="ghost" data-act="trefresh">새로 고침</button><button class="ghost" data-act="tclear">모두 지우기</button></div></header>
+ <div class="tw">${SEND_URL?`<div class="send" style="margin-bottom:18px"><input type="password" id="tkey" value="${esc(tkey)}" placeholder="선생님 암호" autocomplete="off"><button class="btn" data-act="trefresh">확인</button></div>`:'<p class="demo">미리보기예요. 지금은 이 컴퓨터에서 보낸 주문만 보여요.</p>'}
+ <h1>받은 주문 <mark>${L.length}명</mark> <small>아직 만들 것이 남은 학생 ${left}명</small></h1>
+ ${tmsg?`<p class="hint">${tmsg}</p>`:''}
+ ${L.length?`<div class="tgrid">${L.map(x=>`<section class="tc ${todo(x)?'':'done'}"><div class="tc-h"><b>${esc(x.nick)}</b><span>${{e:'초등',m:'중등',h:'고등'}[x.level]||''} · ${clock(x.at)}</span>${todoS(x)?`<span class="badge">${x.re?'노래 고쳐서 다시 보냄':'노래 만들 차례'}</span>`:''}${todoI(x)?`<span class="badge">${x.imgRe?'그림 고쳐서 다시 보냄':'그림 만들 차례'}</span>`:''}${todo(x)?'':'<span>다 보냈어요</span>'}${x.final?`<span class="badge">발표 곡: 노래 ${x.final==='1'?'①':'②'}</span>`:''}</div>
+ ${x.lyrics?`<div class="tsec">노래 · Suno</div>${f(x,'lyrics','가사')}${f(x,'style','스타일')}${f(x,'title','곡 제목')}
+ <div class="tback"><label>만든 노래의 공유 링크를 붙여넣으면 이 학생 화면에 듣기 버튼이 생겨요</label>${link(x,'song1','노래 ① 링크 (https://…)')}${link(x,'song2','노래 ② 링크 (없으면 비워 두기)')}</div>`:''}
+ ${x.imgs?.length?`<div class="tsec">그림 · Gemini</div>${x.imgs.map((p,i)=>f(x,'p'+i,'그림 '+(i+1))).join('')}
+ <div class="tback"><label>그림을 넣은 폴더의 공유 링크를 붙여넣어요</label>${link(x,'imgLink','그림 폴더 링크 (https://…)')}</div>`:''}
+ <div class="row"><button class="x" data-act="tdel" data-id="${x.id}">지우기</button></div></section>`).join('')}</div>`:tmsg?'':'<p class="hint">아직 받은 주문이 없어요. 학생이 보내면 여기에 나타나요.</p>'}</div>`}
+const talk=()=>[`제목: ${titleNow()||'○○'}`,`무슨 이야기: ${S.about.trim()||'○○'}`,`가장 마음에 드는 가사: ${S.best||'○○'}`,S.final?`내가 고른 노래: 노래 ${S.final==='1'?'①':'②'}${S.why.trim()?' · '+S.why.trim():''}`:'',S.feel.trim()?`만들어 보니: ${S.feel.trim()}`:''].filter(Boolean).join('\n');
+const TEXT={talk,in:a=>{const [id,k]=a.split('.'),x=INBOX.find(i=>i.id===id);return(/^p\d$/.test(k)?x?.imgs?.[+k[1]]:x?.[k])||''},title:()=>titleNow()||'(제목을 정하면 여기에 나와요)',lyrics:()=>lyrics()||'(가사를 쓰면 여기에 나와요)',style:()=>style()||'(소리를 고르면 여기에 나와요)',img:i=>imgPrompt(+i),mv:()=>mvPrompt()||'(고르면 여기에 나와요)'};
 
 /* ───────── 조각 ───────── */
 const count=s=>(s.match(/[가-힣A-Za-z0-9]/g)||[]).length;
@@ -432,53 +507,66 @@ const VIEW=[
  <h2>${T('AI에게 줄 소리 주문','AI에게 줄 소리 주문','스타일 프롬프트')} <small>${T('내가 고른 것이 영어로 바뀌었어','고른 것이 영어 주문으로 바뀌었어','선택한 내용이 영어 키워드로 정리돼요')}</small></h2>
  ${pbox('Styles','','style')}<div data-live="means">${means()}</div>`},
 
-()=>`<h1>${T('<mark>Suno</mark>에 넣고 노래를 만들자','<mark>Suno</mark>에 넣고 노래를 만들자','<mark>Suno</mark>로 곡을 생성해요')}</h1>
+()=>`<h1>${T('선생님께 보내서 <mark>노래</mark>를 만들자','선생님께 보내서 <mark>노래</mark>를 만들자','선생님께 보내 <mark>곡</mark>을 생성해요')}</h1>
  <h2>${T('노래 제목','노래 제목','곡 제목')}</h2><input type="text" data-k="title" value="${esc(S.title)}" placeholder="${esc(lines('ch')[0]||'예) 물웅덩이 건너기')}">
- <h2>세 칸에 하나씩 붙여넣기 <small>Suno에서 Custom을 켜면 같은 이름의 칸이 있어${T('','','요')}</small></h2>
+ <h2>${T('선생님께 갈 내용','선생님께 갈 내용','전달할 내용')} <small>${T('제목, 가사, 소리 주문이 맞는지 살펴봐','제목, 가사, 소리 주문이 맞는지 확인해','제목, 가사, 스타일을 확인하세요')}</small></h2>
  ${pbox('Title','제목 칸','title')}
  <div class="pbox"><div class="pbox-h"><span class="ptag">Lyrics</span><span class="pto">가사 칸 · 여기서 바로 고쳐도 돼${T('','','요')}</span><button class="copy" data-copy="lyrics">복사</button></div><textarea data-k="custom" spellcheck="false">${esc(lyrics())}</textarea></div>
  <p class="hint">${T('[Verse]는 이야기 부분, [Chorus]는 후렴이라는 표시야. 지우면 안 돼.','[Verse]는 절, [Chorus]는 후렴 표시야. AI가 이걸 보고 구조를 알아.','대괄호 태그는 AI에게 곡의 구조를 알려 주는 표시예요.')}</p>
  ${pbox('Styles','스타일 칸','style')}<div data-live="means">${means()}</div>
- <div class="row"><a class="btn" href="https://suno.com/create" target="_blank" rel="noopener">Suno 열기</a></div>
- <h2>${T('들어 보니 어때?','들어 보니 어때?','들어 보고 수정하기')} <small>${T('누르면 주문이 바뀌어. 다시 복사해서 만들어 봐','누르면 주문이 바뀌어. 다시 복사해서 만들어 봐','누르면 프롬프트가 바뀌어요. 다시 복사해서 생성해 보세요')}</small></h2>
+ <h2>선생님께 보내기 <small>${T('선생님이 이 주문으로 노래를 만들어 줘','선생님이 이 주문으로 노래를 만들어 줘','선생님이 이 프롬프트로 곡을 생성해 줘요')}</small></h2>
+ <div class="send"><input type="text" data-k="nick" value="${esc(S.nick)}" maxlength="12" placeholder="내 별명 (진짜 이름 말고)" autocomplete="off"><button class="btn" data-act="send">${S.sent?'고쳐서 다시 보내기':'선생님께 보내기'}</button></div>
+ <p class="hint">${S.sent?`<span class="sent">${clock(S.sent)}에 보냈어${T('','','요')}.</span> 가사나 소리를 고쳤으면 다시 눌러${T(' 줘',' 줘',' 주세요')}.`:T('별명을 적고 누르면 제목, 가사, 소리 주문이 선생님께 가.','별명을 적고 누르면 제목, 가사, 소리 주문이 선생님께 가.','별명을 적고 누르면 제목, 가사, 스타일 프롬프트가 전달돼요.')}</p>
+ <div data-live="got">${got()}</div> <h2>${T('들어 보니 어때?','들어 보니 어때?','들어 보고 수정하기')} <small>${T('누르면 주문이 바뀌어. 위에서 다시 보내 봐','누르면 주문이 바뀌어. 위에서 다시 보내 봐','누르면 프롬프트가 바뀌어요. 위에서 다시 보내 주세요')}</small></h2>
  <div class="fixes">${FIX.map(f=>`<button class="chip" data-fix="${f[0]}" aria-pressed="${S.fix.includes(f[0])}"><b>${f[1]}</b></button>`).join('')}<button class="chip" data-step="2"><b>소리를 다시 고를래요</b></button></div>
  ${S.prev?'<p class="hint">바뀐 곳은 위에서 노랗게 보여요.</p>':''}`,
 
 ()=>{const all=[...new Set(lyrics().split('\n').map(s=>s.trim()).filter(s=>s&&!s.startsWith('[')))];
  return `<h1>${T('노래를 <mark>그림</mark>으로 바꾸자','노래를 <mark>그림</mark>으로 바꾸자','곡을 <mark>이미지</mark>로 옮겨요')}</h1>
- <h2>${T('어떤 가사를 그림으로 만들까?','어떤 가사를 장면으로 만들까?','장면으로 만들 가사')} <small>3~5줄</small></h2>
+ <h2>${T('어떤 가사를 그림으로 만들까?','어떤 가사를 장면으로 만들까?','장면으로 만들 가사')} <small>3줄까지</small></h2>
  ${all.length?`<div class="lines">${all.map(l=>`<button class="lpick" data-line="${esc(l)}" aria-pressed="${S.picks.some(p=>p.line===l)}">${esc(l)}</button>`).join('')}</div>`:'<p class="hint">먼저 가사를 써야 고를 수 있어요.</p>'}
  <h2>${T('주인공은 누구야?','주인공','주인공 설정')} <small>${T('생김새를 적으면 그림마다 똑같이 나와','생김새를 적어 두면 장면마다 같은 인물이 나와','외형을 적어 두면 장면마다 같은 인물로 유지돼요')}</small></h2>
  <input type="text" data-k="hero" value="${esc(S.hero)}" placeholder="예) 노란 우비를 입은 단발머리 아이와 갈색 강아지">
  <h2>그림 스타일</h2>${chips('look',LOOK.map(x=>({id:x[0],b:x[1],sw:x[3]})))}
  <h2>색</h2>${chips('color',COLOR.map(x=>({id:x[0],b:x[1],sw:x[3]})))}
- ${S.picks.length?`<h2>그림 주문 <small>하나씩 복사해서 ChatGPT나 Gemini에 붙여넣어${T('','','요')}</small></h2>`:''}
+ ${S.picks.length?`<h2>그림 주문 <small>${T('선생님이 이 주문으로 그림을 만들어 줘','선생님이 이 주문으로 그림을 만들어 줘','선생님이 이 프롬프트로 이미지를 생성해 줘요')}</small></h2>`:''}
  ${S.picks.map((p,i)=>`<div class="scene"><div class="scene-l"><small>장면 ${i+1}</small>${esc(p.line)}</div>
  <input type="text" data-k="picks.${i}.more" value="${esc(p.more)}" placeholder="무엇이 보이는지 더 자세히 써도 돼요 (안 써도 괜찮아요)">
  ${pbox('그림 '+(i+1),'','img',i)}</div>`).join('')}
- ${S.picks.length?`<div class="row"><a class="btn line" href="https://chatgpt.com" target="_blank" rel="noopener">ChatGPT 열기</a><a class="btn line" href="https://gemini.google.com" target="_blank" rel="noopener">Gemini 열기</a></div>`:''}`},
+ ${S.picks.length?`<h2>선생님께 보내기</h2>
+ <div class="send"><input type="text" data-k="nick" value="${esc(S.nick)}" maxlength="12" placeholder="내 별명 (진짜 이름 말고)" autocomplete="off"><button class="btn" data-act="sendimg">${S.isent?'고쳐서 다시 보내기':'그림 주문 보내기'}</button></div>
+ <p class="hint">${S.isent?`<span class="sent">${clock(S.isent)}에 보냈어${T('','','요')}.</span> 장면을 고쳤으면 다시 눌러${T(' 줘',' 줘',' 주세요')}.`:T('노래 보낼 때 쓴 별명 그대로 보내면 돼.','노래 보낼 때 쓴 별명 그대로 보내면 돼.','노래를 보낼 때 쓴 별명 그대로 보내면 돼요.')}</p>`:''}
+ <div data-live="gotimg">${gotimg()}</div>`},
 
-()=>`<h1>${T('<mark>뮤직비디오</mark>로 완성하자','<mark>뮤직비디오</mark>로 완성하자','<mark>뮤직비디오</mark>로 완성해요')}</h1>
- <h2>${T('화면이 어떻게 움직일까?','화면의 움직임','카메라 움직임')}</h2>${chips('cam',CAM.map(x=>({id:x[0],b:x[1],s:lv()>1?x[2]:''})))}
- <h2>${T('장면이 어떻게 바뀔까?','장면이 바뀌는 방법','장면 전환')}</h2>${chips('trans',TRANS.map(x=>({id:x[0],b:x[1],s:lv()>1?x[2]:''})))}
- <h2>영상 주문 <small>영상 만드는 AI의 설명 칸에 붙여넣어${T('','','요')}</small></h2>
- ${pbox('영상','','mv')}`
+()=>{const all=[...new Set(lyrics().split('\n').map(s=>s.trim()).filter(s=>s&&!s.startsWith('[')))];
+ return `<h1>${T('내 노래를 <mark>발표</mark>하자','내 노래를 <mark>발표</mark>하자','내 곡을 <mark>발표</mark>해요')}</h1>
+ <h2>${T('어떤 노래로 발표할까?','어떤 노래로 발표할까?','발표할 곡 고르기')} <small>${T('두 노래를 다시 듣고 하나를 골라','두 노래를 다시 듣고 하나를 골라','두 곡을 다시 듣고 하나를 골라요')}</small></h2>
+ <div data-live="got">${got()}</div>
+ <div style="margin-top:14px">${chips('final',[{id:'1',b:'노래 ①'},{id:'2',b:'노래 ②'}],{s:1})}</div>
+ <h2>${T('왜 그 노래를 골랐어?','왜 그 노래를 골랐어?','그 곡을 고른 이유')}</h2><input type="text" data-k="why" value="${esc(S.why)}" placeholder="예) 후렴이 더 신나서">
+ <h2>${T('제일 마음에 드는 가사는?','가장 마음에 드는 가사','가장 마음에 드는 가사')}</h2>
+ ${all.length?`<div class="lines">${all.map(l=>`<button class="lpick" data-best="${esc(l)}" aria-pressed="${S.best===l}">${esc(l)}</button>`).join('')}</div>`:'<p class="hint">먼저 가사를 써야 고를 수 있어요.</p>'}
+ <h2>${T('만들어 보니 어땠어?','만들어 보니 어땠어?','만들어 본 소감')}</h2><input type="text" data-k="feel" value="${esc(S.feel)}" placeholder="예) 내 이야기가 노래가 돼서 신기했어">
+ <h2>발표 카드 <small>${T('이걸 보면서 말하면 돼','이걸 보면서 말하면 돼','이 내용을 보며 발표해요')}</small></h2>
+ ${pbox('발표','','talk')}
+ <div data-live="gotimg">${gotimg()}</div>`}
 ];
-const DONE=[()=>S.topic||S.about,()=>lines('v1').length&&lines('ch').length,()=>S.genres.length&&S.moods.length&&S.tempo,()=>S.title,()=>S.picks.length&&S.look,()=>S.cam&&S.trans];
+const DONE=[()=>S.topic||S.about,()=>lines('v1').length&&lines('ch').length,()=>S.genres.length&&S.moods.length&&S.tempo,()=>S.title,()=>S.picks.length&&S.look,()=>S.final&&S.best];
 
 function sheet(){const P=S.custom!=null?null:parts(),t=tags();
  return `<div class="lbl">내 노래</div><div class="ttl ${titleNow()?'':'empty'}">${esc(titleNow())||'제목은 아직'}</div>${S.about?`<div style="color:#A9B2C5">${esc(S.about)}</div>`:''}
  <div class="lbl">가사</div>${P?(P.length?P.map(p=>`<div class="part">${p[1]}</div>${p[2].map(esc).join('<br>')}`).join(''):'<div class="empty">한 줄씩 쓰면 여기에 노래 모양으로 쌓여요</div>'):`<div style="white-space:pre-wrap">${esc(S.custom)}</div>`}
  <div class="lbl">소리</div>${t.length?`<div class="tags">${t.map(x=>`<span>${esc(x[1])}</span>`).join('')}</div>`:'<div class="empty">고른 소리가 여기에</div>'}`}
-const LIVE={sheet,means,cnt};
+const LIVE={sheet,means,cnt,got,gotimg};
 function live(){document.querySelectorAll('[data-live]').forEach(el=>{const [n,a]=el.dataset.live.split(':');el.innerHTML=LIVE[n]?LIVE[n](a):esc(TEXT[n](a))})}
 
 const app=document.getElementById('app');
 function render(keep){
- const G=[['1차시',0,3],['2차시',3,5],['3차시',5,6]];
+ if(TEACH()){app.innerHTML=teacher();if(!keep)window.scrollTo(0,0);return}
+ const G=[['1차시',0,3],['2차시',3,5],['3차시',5,6]];if(S.step>=3&&!MINE)mine();
  app.innerHTML=`<header class="top"><div class="top-in"><div class="brand">AI 사운드<i>랩</i></div><span class="spacer"></span>
  <div class="seg" aria-label="학교급">${[['e','초등'],['m','중등'],['h','고등']].map(l=>`<button data-level="${l[0]}" aria-pressed="${S.level===l[0]}">${l[1]}</button>`).join('')}</div>
- <button class="ghost" data-act="save">저장</button><button class="ghost" data-act="load">불러오기</button></div></header>
+ <button class="ghost" data-act="save">저장</button><button class="ghost" data-act="load">불러오기</button><button class="ghost" data-act="tgo">선생님</button></div></header>
  <nav class="rail">${G.map(x=>`<span class="grp">${x[0]}</span>`+STEPS.slice(x[1],x[2]).map((t,j)=>{const i=x[1]+j;return `<button class="rs ${S.step===i?'on':''} ${DONE[i]()?'done':''}" data-step="${i}"><span class="n">${i+1}</span><span class="t">${t}</span></button>`}).join('')).join('')}</nav>
  <div class="wrap"><main class="card">${VIEW[S.step]()}</main><aside class="sheet" data-live="sheet" aria-label="내 노래">${sheet()}</aside></div>
  <div class="nav"><div class="nav-in"><button class="btn line" data-act="prev" ${S.step?'':'disabled style="opacity:.3"'}>이전</button>${S.step?'':'<button class="x" data-act="reset">처음부터 새로 하기</button>'}<span class="next">${S.step<5?'다음: '+STEPS[S.step+1]:'다 만들었어요!'}</span>${S.step<5?'<button class="btn" data-act="next">다음</button>':''}</div></div>`;
@@ -507,7 +595,12 @@ function beat(bpm){try{
 const SOUND=['genres','moods','tempo','key','who','how','inst','tex','flow'];
 let lastLine=null;
 document.addEventListener('focusin',e=>{if(e.target.dataset?.k?.startsWith('L.'))lastLine=e.target.dataset.k});
-document.addEventListener('input',e=>{const k=e.target.dataset?.k;if(!k)return;put(k,e.target.value);store();live();
+// 선생님이 링크를 붙여넣으면 바로 저장. 칸에서 나오면 카드 순서를 다시 정리
+document.addEventListener('input',e=>{const tl=e.target.dataset?.tl;if(!tl)return;const [id,k]=tl.split('.'),v=e.target.value.trim(),x=INBOX.find(i=>i.id===id);if(!x)return;
+ const f={[k]:v};if(safe(v))f[k==='imgLink'?'imgRe':'re']=false;Object.assign(x,f);api({op:'put',id,f})});
+document.addEventListener('change',e=>{if(e.target.dataset?.tl)setTimeout(()=>{if(TEACH()&&!document.activeElement?.dataset?.tl)render(1)},0)});
+document.addEventListener('input',e=>{if(e.target.dataset?.tl)return;if(e.target.id==='tkey'){tkey=e.target.value;try{sessionStorage.setItem('soundlab-tkey',tkey)}catch(x){}return}
+ const k=e.target.dataset?.k;if(!k)return;put(k,e.target.value);store();live();
  if(k==='about')document.querySelectorAll('.idea').forEach(b=>b.setAttribute('aria-pressed',b.dataset.idea===S.about))});
 document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
  if(d.step!=null)return go(+d.step);
@@ -518,14 +611,16 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   if(SOUND.includes(d.pick))S.preset='';
   if(d.pick==='genres'&&S.genres.length){const G=by(GENRE,S.genres[0]);if(!S.tempo)S.tempo=by(TEMPO,G[4])[4]<=lv()?G[4]:'fast';if(!S.instMine)S.inst=[...G[5]].slice(0,MAX().inst);if(!S.who&&S.genres.some(x=>x==='hiphop'||x==='trap'))S.who='rap'}
   if(d.pick==='tempo'&&S.tempo)beat(by(TEMPO,S.tempo)[3]);
+  if(d.pick==='final'&&S.sid)api({op:'put',id:S.sid,f:{final:S.final}}).catch(()=>{});
   store();return render(1)}
  if(d.pre){applyPre(PRE.find(p=>p.id===d.pre));store();render(1);return toast('아래가 채워졌어요. 마음대로 바꿔 보세요.')}
  if(d.idea){S.about=S.about===d.idea?'':d.idea;store();return render(1)}
  if(d.ex){const [k,i]=d.ex.split('.'),ex=exOf(k,+i);if(S.L[k][i].trim()&&S.L[k][i]!==ex)return toast('이미 쓴 줄이 있어요. 지우고 누르면 예시가 들어가요.');S.L[k][i]=ex;store();render(1);toast('예시를 넣었어요. 내 이야기로 고쳐 보세요.');return}
  if(d.word){if(!lastLine||!document.querySelector(`[data-k="${lastLine}"]`))return toast('먼저 넣고 싶은 줄을 눌러 주세요.');const el=document.querySelector(`[data-k="${lastLine}"]`),p=el.selectionStart??el.value.length,w=(p&&el.value[p-1]!==' '?' ':'')+d.word+(el.value[p]&&el.value[p]!==' '?' ':'');el.value=el.value.slice(0,p)+w+el.value.slice(p);put(lastLine,el.value);store();live();el.focus();el.setSelectionRange(p+w.length,p+w.length);return}
+ if(d.best){S.best=S.best===d.best?'':d.best;store();return render(1)}
  if(d.bank){S.bank=+d.bank;store();return render(1)}
  if(d.chant){S.chant=S.chant===d.chant?'':d.chant;store();return render(1)}
- if(d.line){const i=S.picks.findIndex(p=>p.line===d.line);if(i>=0)S.picks.splice(i,1);else if(S.picks.length>=5)return toast('5줄까지 고를 수 있어요.');else S.picks.push({line:d.line,more:''});store();return render(1)}
+ if(d.line){const i=S.picks.findIndex(p=>p.line===d.line);if(i>=0)S.picks.splice(i,1);else if(S.picks.length>=3)return toast('3줄까지 고를 수 있어요. 하나를 먼저 빼 주세요.');else S.picks.push({line:d.line,more:''});store();return render(1)}
  if(d.fix){const before=tags().map(x=>x[0]),f=d.fix;
   if(f==='fast'||f==='slow'){const L=tempos(),i=L.findIndex(x=>x[0]===S.tempo),n=i+(f==='fast'?-1:1);if(i<0)return toast('소리에서 빠르기를 먼저 골라 주세요.');if(n<0||n>=L.length)return toast(f==='fast'?'이미 가장 느린 빠르기예요.':'이미 가장 빠른 빠르기예요.');S.tempo=L[n][0];toast(`빠르기를 '${L[n][1]}'로 바꿨어요.`)}
   else{const i=S.fix.indexOf(f);if(i>=0)S.fix.splice(i,1);else{S.fix.push(f);if(OPP[f])S.fix=S.fix.filter(x=>x!==OPP[f]);toast('소리 주문에 넣었어요.')}}
@@ -542,10 +637,34 @@ document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)r
   case'lucky':{const tp=rand(TOPIC.filter(x=>x.id!==S.topic));S.topic=tp.id;S.about=rand(tp.ideas[tg()]);store();render(1);return toast(`'${tp.n[tg()]}'이(가) 나왔어요. 마음에 안 들면 또 눌러요.`)}
   case'save':{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download=`사운드랩_${(titleNow()||'내노래').replace(/[\\/:*?"<>|]/g,'')}.json`;document.body.appendChild(a);a.click();a.remove();return toast('다운로드 폴더에 저장했어요.')}
   case'load':return document.getElementById('file').click();
+  case'send':{const nick=S.nick.trim();
+   if(!nick)return toast('별명을 먼저 적어 주세요.');
+   if(!lyrics().trim()||!style())return toast('가사와 소리를 먼저 만들어 주세요.');
+   S.sid=S.sid||Math.random().toString(36).slice(2,10);t.disabled=true;
+   api({op:'put',id:S.sid,f:{nick,title:titleNow(),lyrics:lyrics(),style:style(),level:S.level,at:Date.now(),re:!!S.sent}})
+    .then(r=>{if(!r.ok)throw 0;S.sent=Date.now();store();render(1);mine();toast('선생님께 보냈어요!')})
+    .catch(()=>{t.disabled=false;toast('보내지 못했어요. 선생님께 말해 주세요.')});return}
+  case'sendimg':{const nick=S.nick.trim(),n=Math.min(3,S.picks.length);
+   if(!nick)return toast('별명을 먼저 적어 주세요.');
+   if(!n)return toast('그림으로 만들 가사를 먼저 골라 주세요.');
+   S.sid=S.sid||Math.random().toString(36).slice(2,10);t.disabled=true;
+   api({op:'put',id:S.sid,f:{nick,title:titleNow(),level:S.level,at:Date.now(),imgs:Array.from({length:n},(_,i)=>imgPrompt(i)),imgRe:!!S.isent}})
+    .then(r=>{if(!r.ok)throw 0;S.isent=Date.now();store();render(1);mine();toast('선생님께 보냈어요!')})
+    .catch(()=>{t.disabled=false;toast('보내지 못했어요. 선생님께 말해 주세요.')});return}
+  case'tgo':location.hash='#teacher';return;
+  case'tback':location.hash='';return;
+  case'trefresh':return inbox().then(()=>toast('새로 불러왔어요.'));
+  case'tdel':if(confirm('이 주문을 지울까요?'))api({op:'del',id:d.id}).then(inbox);return;
+  case'tclear':if(confirm('받은 주문을 모두 지울까요? 되돌릴 수 없어요.'))api({op:'clear'}).then(inbox);return;
   case'reset':if(confirm('지금까지 만든 것이 모두 지워져요. 새로 시작할까요?')){const l=S.level;S=blank();S.level=l;store();render()}return;
  }});
 document.getElementById('file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{S=merge(blank(),JSON.parse(r.result));store();render();toast('불러왔어요.')}catch(x){toast('사운드랩 저장 파일이 아니에요.')}};r.readAsText(f);e.target.value=''});
 render();
+addEventListener('hashchange',()=>{render();TEACH()?inbox():mine()});
+addEventListener('storage',e=>{if(e.key!==BOX)return;const a=document.activeElement;TEACH()?(a?.tagName!=='INPUT'&&inbox()):mine()});
+setInterval(()=>{if(TEACH()&&document.activeElement?.tagName!=='INPUT')inbox()},8000);
+setInterval(()=>{if(S.step>=3&&!document.hidden)mine()},15000);
+TEACH()?inbox():mine();
 })();
 </script>
 </body>
