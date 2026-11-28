@@ -153,7 +153,7 @@ input[type=text]:focus,input[type=password]:focus,textarea:focus{border-color:va
 .stab:hover{border-color:var(--ink)}
 .stab b{font-weight:800}
 .stab span{font-size:13.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
-.stab.full span{color:var(--ok);font-weight:750}
+.stab.ok span{color:var(--ok);font-weight:750}
 .stab[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
 .stab[aria-pressed=true] span{color:#C9D0DE}
 .stabs+.sec{margin-top:0}
@@ -192,12 +192,12 @@ input[type=text]:focus,input[type=password]:focus,textarea:focus{border-color:va
 .al-ly .part{font-size:12.5px;font-weight:800;color:var(--mark);margin:12px 0 2px}
 .al-ly .part:first-child{margin-top:0}
 .al-ly .empty{color:#6C7689}
-.full{position:fixed;inset:0;z-index:50;background:var(--ink);overflow:auto;padding:20px max(16px,4vw) 48px}
+.albumfull{position:fixed;inset:0;z-index:50;background:var(--ink);overflow:auto;padding:20px max(16px,4vw) 48px}
 .full-h{display:flex;justify-content:flex-end;gap:8px;max-width:1100px;margin:0 auto 8px}
-.full .album{max-width:1100px;margin:0 auto;padding:12px 0 0;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:48px}
-.full .al-ly{font-size:19px}
-.full .al-t{font-size:clamp(34px,4.6vw,60px)}
-@media (max-width:760px){.album,.full .album{grid-template-columns:1fr}}
+.albumfull .album{max-width:1100px;margin:0 auto;padding:12px 0 0;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:48px}
+.albumfull .al-ly{font-size:19px}
+.albumfull .al-t{font-size:clamp(34px,4.6vw,60px)}
+@media (max-width:760px){.album,.albumfull .album{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.album:hover .al-cd{animation:none}}
 /* 선생님께 보내기 · 선생님 화면 */
 .send{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -595,7 +595,7 @@ const VIEW=[
 
 ()=>`<h1>${T('한 줄씩 <mark>가사</mark>를 써 보자','<mark>가사</mark>를 한 줄씩 채워 보자','구조에 맞춰 <mark>가사</mark>를 써 봐요')}</h1>
  ${S.custom!=null?`<p class="hint">'노래 만들기'에서 가사를 직접 고쳤어요. 여기서 다시 쓰려면 <button class="x" data-act="uncustom">줄 쓰기 내용으로 되돌리기</button></p>`:''}
- <div class="stabs">${secs().map(k=>`<button class="stab ${filled(k)>=nLines(k)?'full':''}" data-sec="${k}" aria-pressed="${k===curSec()}"><b>${SEC[lv()][k][0]}</b><span>${filled(k)}/${nLines(k)}줄</span></button>`).join('')}</div>
+ <div class="stabs">${secs().map(k=>`<button class="stab ${filled(k)>=nLines(k)?'ok':''}" data-sec="${k}" aria-pressed="${k===curSec()}"><b>${SEC[lv()][k][0]}</b><span>${filled(k)}/${nLines(k)}줄</span></button>`).join('')}</div>
  ${[curSec()].map(k=>{const ex=Array.from({length:nLines(k)},(_,i)=>exOf(k,i)).filter(Boolean),ks=secs(),nx=ks[ks.indexOf(k)+1];
  return `<div class="sec"><div class="sec-h"><b>${SEC[lv()][k][0]}</b><span>${SEC[lv()][k][1]}</span>${k==='v2'&&!lv()?'<span class="badge">더 쓰고 싶으면</span>':''}${k==='pre'?'<span class="badge">선택</span>':''}<span class="spacer"></span>${ex.length?`<button class="exb" data-act="exshow">${showEx?'예시 닫기':'예시 보기'}</button>`:''}</div>
  ${showEx&&ex.length?`<div class="exbox"><b>이렇게 쓸 수 있어요</b>${ex.map(esc).join('<br>')}<span>그대로 옮기지 말고 내 이야기로 바꿔 써요.</span></div>`:''}
@@ -694,7 +694,7 @@ function render(keep){
  <nav class="rail">${G.map(x=>`<span class="grp">${x[0]}</span>`+STEPS.slice(x[1],x[2]).map((t,j)=>{const i=x[1]+j;return `<button class="rs ${S.step===i?'on':''} ${DONE[i]()?'done':''}" data-step="${i}"><span class="n">${i+1}</span><span class="t">${t}</span></button>`}).join('')).join('')}</nav>
  <div class="wrap"><main class="card">${VIEW[S.step]()}</main><div class="side">${S.step===1?bankHTML('out'):''}<aside class="sheet" data-live="sheet" aria-label="내 노래">${sheet()}</aside></div></div>
  <div class="nav"><div class="nav-in"><button class="btn line" data-act="prev" ${S.step?'':'disabled style="opacity:.3"'}>이전</button>${S.step?'':'<button class="x" data-act="reset">처음부터 새로 하기</button>'}<span class="next">${S.step<5?'다음: '+STEPS[S.step+1]:'다 만들었어요!'}</span>${S.step<5?'<button class="btn" data-act="next">다음</button>':''}</div></div>
- ${showAlbum?`<div class="full" role="dialog" aria-label="내 앨범"><div class="full-h"><button class="ghost" data-act="albumsave">그림으로 저장</button><button class="ghost" data-act="albumclose">닫기</button></div><div data-live="album">${album()}</div></div>`:''}`;
+ ${showAlbum?`<div class="albumfull" role="dialog" aria-label="내 앨범"><div class="full-h"><button class="ghost" data-act="albumsave">그림으로 저장</button><button class="ghost" data-act="albumclose">닫기</button></div><div data-live="album">${album()}</div></div>`:''}`;
  if(!keep)window.scrollTo(0,0)}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2200)}
 function go(i){S.step=Math.max(0,Math.min(5,i));store();render()}
